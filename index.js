@@ -14,7 +14,24 @@ request({
 }
     , function (error, res, body) {
         if (!error && res.statusCode == 200) {
-         
+            const enc = charset(res.headers, body) // 해당 사이트의 charset값을 획득
+            const i_result = iconv.decode(body, enc) // 획득한 charset값으로 body를 디코딩
+            let $ = cheerio.load(i_result);  //loading of complete HTML body
+
+            let titleArray = []; // 베스트셀러 제목을 배열에 담는다.
+    
+            $('div[class=title]').each(function (index) {
+                let title = $(this).text().trim() // 필요없는 빈칸을 없애준다.
+                titleArray.push(title)
+            })
+            fs.writeFile('data.txt', titleArray.slice(4,titleArray.length), function (err) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("success");
+                }
+            });
         }
     }
 
