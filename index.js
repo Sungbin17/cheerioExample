@@ -1,7 +1,7 @@
-const request = require('request');
-const cheerio = require('cheerio');
-const fs = require('fs');
-const iconv = require('iconv-lite') //인코딩을 변환 해주는 모듈, 필자는 iconv보다 iconv-lite를 선호한다.
+const request = require('request'); // url 으로 요청하기 위한 모듈
+const cheerio = require('cheerio'); // 크롤링에 필요한 모듈
+const fs = require('fs'); // file system 에 파일을 저장하기 위해 사용하는 모듈
+const iconv = require('iconv-lite') //인코딩을 변환 해주는 모듈
 const charset = require('charset') //해당 사이트의 charset값을 알 수 있게 해준다.
 
 // 교보문고 url
@@ -14,25 +14,7 @@ request({
 }
     , function (error, res, body) {
         if (!error && res.statusCode == 200) {
-            const enc = charset(res.headers, body) // 해당 사이트의 charset값을 획득
-            const i_result = iconv.decode(body, enc) // 획득한 charset값으로 body를 디코딩
-            let $ = cheerio.load(i_result);  //loading of complete HTML body
-
-            let titleArray = []; // 베스트셀러 제목을 배열에 담는다.
-    
-            $('div[class=title]').each(function (index) {
-                let title = $(this).text().trim()
-                console.log(title)
-                titleArray.push(title)
-            })
-            fs.writeFile('data.txt', titleArray, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("success");
-                }
-            });
+         
         }
     }
 
